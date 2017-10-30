@@ -1,0 +1,16 @@
+{
+  "name": "testbot",
+  "version": "0.0.1",
+  "description": "just a testbot",
+  "main": "index.js",
+  "dependencies": {
+    "botpress": "1.x",
+    "botpress-web": "1.x"
+  },
+  "scripts": {
+    "start": "botpress start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kostas Agorastidis",
+  "license": "Botpress Proprietary License"
+}

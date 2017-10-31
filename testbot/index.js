@@ -19,21 +19,66 @@
   Our Slack Community: https://slack.botpress.io
 */
 
-module.exports = function(bp) {
-  // Listens for a first message (this is a Regex)
-  // GET_STARTED is the first message you get on Facebook Messenger
-  bp.hear(/GET_STARTED|hello|hi|test|hey|holla/i, (event, next) => {
-    event.reply('#welcome') // See the file `content.yml` to see the block
-  })
+const options = {
+    quick_replies: [
+        {
+            content_type: "text",
+            title: "Yes send me an image",
+            payload: "image"
+        }
+    ],
+    typing: true,
+    waitRead: true
+}
 
-  // You can also pass a matcher object to better filter events
-  bp.hear({
-    type: /message|text/i,
-    text: /exit|bye|goodbye|quit|done|leave|stop/i
-  }, (event, next) => {
-    event.reply('#goodbye', {
-      // You can pass data to the UMM bloc!
-      reason: 'unknown'
+const waitRead = {
+    waitRead: true,
+    typing: true
+}
+
+module.exports = function(bp) {
+
+    bp.hear(/GET_STARTED|hello|hi|test|hey|holla/i, (event, next) => {
+        event.reply('#welcome')
     })
-  })
+
+    bp.hear('WELCOME.B1', (event, next) => {
+        event.reply('#choose_img')
+    })
+
+    bp.hear('CHOOSE_IMG.B1', (event, next) => {
+        event.reply('#img_desc', { img_type: 'dog' })
+        bp.messenger.sendAttachment(event.user.id, 'image', 'https://source.unsplash.com/random/1000x1000/?dog,dogs') 
+    })
+
+    bp.hear('CHOOSE_IMG.B2', (event, next) => {
+        event.reply('#img_desc', { img_type: 'cat' })
+        bp.messenger.sendAttachment(event.user.id, 'image', 'https://source.unsplash.com/random/1000x1000/?cat,cats') 
+    })
+
+    bp.hear('CHOOSE_IMG.B3', (event, next) => {
+        event.reply('#img_desc', { img_type: 'random'})
+        bp.messenger.sendAttachment(event.user.id, 'image', 'https://source.unsplash.com/random/1000x1000/') 
+    })
+
+    bp.hear('WELCOME.B2', (event, next) => {
+        event.reply('#welcome_neg_reply')
+    })
+
+   bp.hear({'nlp.source': 'agent' }, (event, next) => {
+        if (event.nlp.fulfillment.speech == 'json') {
+            event.reply('#img_desc', { img_type: 'random' })
+            bp.messenger.sendAttachment(event.user.id, 'image', 'https://picsum.photos/1000/1000/?random')
+        }
+        else {
+            bp.messenger.sendText(event.user.id, event.nlp.fulfillment.speech)
+        }
+        
+    })
+
+   /*  bp.hear({ 'nlp.source': 'domains' }, (event, next) => {
+        event.reply('#variable', { answer: event.nlp.fulfillment.speech })
+    }) */
+
+    //console.log('bp started');
 }

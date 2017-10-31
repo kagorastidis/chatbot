@@ -1,18 +1,30 @@
-welcome: # this is the #welcome bloc referenced in index.js
-  - typing: true
-    text: # Picks one randomly
-      - Hey there!
+welcome: 
+  - text:
+      - Hey there {{user.first_name}}!
       - Hello {{user.first_name}}
-      - Good day :)
-  - text: This is just a regular Hello World, I don't do anything ;)
+      - Good day {{user.first_name}} :)
+  - text: Do you want me to send you a cool image?
+    quick_replies:
+      - <.B1> Sure hit me!
+      - <.B2> Not at this time
     typing: 2s
-  - text: Make sure to check out the 'index.js' file to see how I work
-    typing: true
-  - wait: 5s
-  - text: You can say goodbye now
-    typing: 1s
 
-goodbye:
-  - text: You are leaving because of reason {{reason}}
+welcome_neg_reply:
+  - text: What a pity! :( . You can type image at any time and you will get one.
+
+choose_img: 
+  - text: 
+      - Thats Great!
+      - Cool!
+      - Power your engines! Great content incoming! :D
+  - text: Do you have any particular interest in the image category, or just random?
+    quick_replies:
+      - <.B1> Dogs
+      - <.B2> Cats
+      - <.B3> Random
     typing: true
-  - Hope to see you back again soon! # if no other properties, you can just send a strings
+
+img_desc:
+  - text: Here is an image showing a "{{img_type}}"
+
+
